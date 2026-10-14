@@ -1,4 +1,5 @@
 import * as postService from '../services/post.service.js';
+import mongoose from 'mongoose';
 
 export const addPost = async (req, res) => {
     const post = await postService.addPost(req.params.user, req.body);
@@ -6,12 +7,19 @@ export const addPost = async (req, res) => {
 };
 
 export const findPostById = async (req, res) => {
-    const post = await postService.findPostById(req.params.id);
-    if (post) return res.json(post);
-    return res.status(404).json({message: 'Post not found'});
+    try {
+        const post = await postService.findPostById(req.params.id);
+        return res.json(post);
+    } catch (e) {
+        return res.status(404).json({message: 'Post not found'});
+    }
 };
 
 export const addLike = async (req, res) => {
+    if (!mongoose.isObjectIdOrHexString(req.params.id)) {
+        return res.sendStatus(404);
+    }
+
     const success = await postService.addLike(req.params.id);
     if (success) return res.status(204).end();
     return res.sendStatus(404)
