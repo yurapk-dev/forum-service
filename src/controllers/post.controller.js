@@ -31,36 +31,42 @@ export const findPostsByAuthor = async (req, res) => {
 };
 
 export const addComment = async (req, res) => {
-    const success = await postService.addComment(req.params.id, req.params.user, req.body.message);
-    if (success) return res.json(success);
-    return res.sendStatus(404)
+    try {
+        const post = await postService.addComment(req.params.id, req.params.commenter, req.body.message);
+        return res.json(post);
+    } catch (e) {
+        return res.sendStatus(404)
+    }
 };
 
-export const deletePost = async (req, res) => {
-    const post = await postService.deletePost(req.params.id);
-    if (!post) return res.status(404).send({
-        "timestamp": new Date().toISOString(),
-        "status": 404,
-        "error": "Not Found",
-        "message": `Post with id ${req.params.id} not found`,
-        "path": req.path
-    })
-    return res.json(post);
-};
+    export const deletePost = async (req, res) => {
+        const post = await postService.deletePost(req.params.id);
+        if (!post) return res.status(404).send({
+            "timestamp": new Date().toISOString(),
+            "status": 404,
+            "error": "Not Found",
+            "message": `Post with id ${req.params.id} not found`,
+            "path": req.path
+        })
+        return res.json(post);
+    };
 
-export const findPostsByTags = async (req, res) => {
-    const posts = await postService.findPostsByTags(req.query.values);
-    return res.json(posts);
-};
+    export const findPostsByTags = async (req, res) => {
+        let values = req.query.values;
+        if (Array.isArray(req.query.values)) {
+            values = req.query.values.join(',');
+        }
+        return res.json(await postService.findPostsByTags(values));
+    };
 
-export const findPostsByPeriod = async (req, res) => {
-    const {dateFrom, dateTo} = req.query;
-    const posts = await postService.findPostsByPeriod(dateFrom, dateTo);
-    return res.json(posts);
-};
+    export const findPostsByPeriod = async (req, res) => {
+        const {dateFrom, dateTo} = req.query;
+        const posts = await postService.findPostsByPeriod(dateFrom, dateTo);
+        return res.json(posts);
+    };
 
-export const updatePost = async (req, res) => {
-    const post = await postService.updatePost(req.params.id, req.body);
-    if (post) return res.json(post);
-    return res.sendStatus(404);
-};
+    export const updatePost = async (req, res) => {
+        const post = await postService.updatePost(req.params.id, req.body);
+        if (post) return res.json(post);
+        return res.sendStatus(404);
+    };

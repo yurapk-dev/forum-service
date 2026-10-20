@@ -20,7 +20,12 @@ const commentSchema = new Schema({
         default: 0
     },
 }, {
-    _id: false
+    _id: false,
+    toJSON: {
+        transform: (doc, ret) => {
+            ret.dateCreated = doc.dateCreated.toISOString().slice(0, 19);
+        }
+    }
 })
 
 export default commentSchema;

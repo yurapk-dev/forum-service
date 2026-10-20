@@ -12,3 +12,20 @@ export const addLike = async (id) => {
 }
 
 export const deletePostById = async (id) => Post.findByIdAndDelete(id).exec();
+
+export const findPostsByAuthor = async (user) => Post.find({user}).exec();
+
+export const addComment = async (id, comment) =>
+    Post.findByIdAndUpdate(id, {$push: {comments: comment}}, {returnDocument: 'after'}).exec();
+
+
+export const findPostsByTags = async (tags) => {
+    const tagsRegex = tags.map(tag => new RegExp(`^${tag}$`, 'i'));
+    return Post.find({ tags: { $in: tagsRegex } }).exec();
+}
+
+export const findPostsByPeriod = async (startDate, endDate) =>
+    Post.find({createdAt: {$gte: startDate, $lte: endDate}}).exec();
+
+export const updatePost = async (id, postData) =>
+    Post.findByIdAndUpdate({_id: id}, postData, {returnDocument: 'after'}).exec();
