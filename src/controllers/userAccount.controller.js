@@ -1,67 +1,69 @@
 import * as userAccountService from '../services/userAccount.service.js';
 
-export const registerUser = async (req, res) => {
-    const user = await userAccountService.registerUser(req.body);
-    if (user) {
-        return res.status(201).json(user);
-    } else return res.status(409).send();
+export const registerUser = async (req, res, next) => {
+    try {
+        const userAccount = await userAccountService.registerUser(req.body);
+        return res.status(201).json(userAccount);
+    } catch (e) {
+        return next(e);
+    }
 }
-export const loginUser = async (req, res) => {
+
+export const loginUser = async (req, res, next) => {
 // TODO: Implement login user
+    throw new Error('Not implemented');
 }
 
-export const deleteUser = async(req, res) => {
-    if (!req.user) {
-        return res.status(401).send();
+export const deleteUser = async (req, res, next) => {
+    try {
+        const userAccount = await userAccountService.deleteUser(req.params.login);
+        return res.json(userAccount);
+    } catch (e) {
+        return next(e);
     }
-    if (req.user.login !== req.params.user && !req.user.roles?.includes('ADMIN')) {
-        return res.status(403).send(); // ?
-    }
-    const deletedUser = await userAccountService.deleteUser(req.params.user);
-    return res.status(200).json(deletedUser);
-}
-export const updateUser = async(req, res) => {
-    if (!req.user) {
-        return res.status(401).send();
-    }
-    if (req.user.login !== req.params.user && !req.user.roles?.includes('ADMIN')) {
-        return res.status(403).send();
-    }
-    const updatedUser = await userAccountService.updateUser(req.params.user, req.body);
-    return res.status(200).json(updatedUser);
 }
 
-export const addRole = async(req, res) => {
-    if (!req.user) {
-        return res.status(401).send();
+export const updateUser = async (req, res, next) => {
+    try {
+        const userAccount = await userAccountService.updateUser(req.params.login, req.body);
+        return res.json(userAccount);
+    } catch (e) {
+        return next(e);
     }
-    if (!req.user.roles?.includes('ADMIN')) {
-        return res.status(403).send();
-    }
-    const user = await userAccountService.addRole(req.params.user, req.params.role);
-    return res.status(200).json(user);
 }
 
-export const deleteRole = async(req, res) => {
-    if (!req.user) {
-        return res.status(401).send();
+export const addRole = async (req, res, next) => {
+    try {
+        const userRoles = await userAccountService.changeRoles(req.params.login, req.body);
+        return res.json(userRoles);
+    } catch (e) {
+        return next(e);
     }
-    if (!req.user.roles?.includes('ADMIN')) {
-        return res.status(403).send();
-    }
-    const user = await userAccountService.deleteRole(req.params.user, req.params.role);
-    return res.status(200).json(user);
 }
-
-export const changePassword = async(req, res) => {
+export const changePassword = async (req, res) => {
     // TODO implement change password
+    throw new Error('Not implemented');
 }
 
-export const getUser = async(req, res) => {
-    if (!req.user) {
-        return res.status(401).send();
+export const deleteRole = async (req, res) => {
+    // if (!req.user) {
+    //     return res.status(401).send();
+    // }
+    // if (!req.user.roles?.includes('ADMIN')) {
+    //     return res.status(403).send();
+    // }
+    // const user = await userAccountService.deleteRole(req.params.user, req.params.role);
+    // return res.status(200).json(user);
+}
+
+
+export const getUser = async (req, res, next) => {
+    try {
+        const userAccount = await userAccountService.getUser(req.params.login);
+        return res.json(userAccount);
+    } catch (e) {
+        return next(e);
     }
-    const user = await userAccountService.getUser(req.params.user);
-    return res.status(200).json(user);
+
 }
 

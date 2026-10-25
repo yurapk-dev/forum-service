@@ -1,8 +1,9 @@
 import express from "express";
 import postRoutes from "./routes/post.routes.js";
-import userAccountRoutes from "./routes/userAccount.routes.js";
+import userRoutes from "./routes/userAccount.routes.js";
 import mongoose from "mongoose";
 import config from "./configuration/config.js";
+import errorHandler from "./middlewares/error.middleware.js";
 
 const port = process.env.PORT || 3000;
 
@@ -10,10 +11,12 @@ const app = express();
 
 app.use(express.json());
 
-app.use('/forum/', postRoutes);
-app.use('/account', userAccountRoutes);
+app.use('/forum', postRoutes);
+app.use('/account', userRoutes);
+app.use(errorHandler);
 
-app.use((req, res) => res.status(404).type('text/plain; charset=utf-8').send('Not found')
+app.use((req, res) =>
+    res.status(404).type('text/plain; charset=utf-8').send('Not found')
 );
 
 const connectDB = async () => {

@@ -14,7 +14,9 @@ export const findPostById = async id => {
 }
 
 export const addLike = async id => {
-    return await postRepository.addLike(id);
+        const success = await postRepository.addLike(id);
+        if (success) return success;
+        throw new Error(`Post with id ${id} not found`);
 }
 
 export const findPostsByAuthor = async user => {
@@ -32,7 +34,7 @@ export const addComment = async (id, commenter, content) => {
 
 export const deletePost = async id => {
     const post = await postRepository.deletePostById(id);
-    if(!post) {
+    if (!post) {
         throw new Error(`Post with id ${id} not found`);
     }
     return post;
@@ -48,5 +50,9 @@ export const findPostsByPeriod = async (dateFrom, dateTo) => {
 }
 
 export const updatePost = async (postId, data) => {
-    return await postRepository.updatePost(postId, data);
+    const post = await postRepository.updatePost(postId, data);
+    if (!post) {
+        throw new Error(`Post with id ${postId} not found`);
+    }
+    return post;
 }
