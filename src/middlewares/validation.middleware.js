@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import {ADMIN, MODERATOR, USER} from "../configuration/constants.js";
 
 const schemas = {
     addPost: Joi.object({
@@ -24,18 +25,14 @@ const schemas = {
         password: Joi.string().required(),
         firstName: Joi.string().required(),
         lastName: Joi.string().required()
-    }).required(), // агент рекомендует добавить required к объекту !!!?
+    }),
     updateUser: Joi.object({
         firstName: Joi.string(),
         lastName: Joi.string(),
     }).min(1),
-    addRole: Joi.object({
+    changeRole: Joi.object({
         user: Joi.string().required(),
-        role: Joi.string().required()
-    }),
-    deleteRole: Joi.object({
-        user: Joi.string().required(),
-        role: Joi.string().required()
+        role: Joi.string().valid(USER, MODERATOR, ADMIN).insensitive().required()
     }),
     getUser: Joi.object({
         user: Joi.string().required()

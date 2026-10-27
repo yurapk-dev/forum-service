@@ -10,13 +10,13 @@ export const registerUser = async (req, res, next) => {
 }
 
 export const loginUser = async (req, res, next) => {
-// TODO: Implement login user
+
     throw new Error('Not implemented');
 }
 
-export const deleteUser = async (req, res, next) => {
+export const removeUser = async (req, res, next) => {
     try {
-        const userAccount = await userAccountService.deleteUser(req.params.user);
+        const userAccount = await userAccountService.removeUser(req.params.user);
         return res.json(userAccount);
     } catch (e) {
         return next(e);
@@ -41,18 +41,24 @@ export const addRole = async (req, res, next) => {
     }
 }
 export const changePassword = async (req, res) => {
-    // TODO implement change password
+
     throw new Error('Not implemented');
 }
 
-export const deleteRole = async (req, res) => {
+export const deleteRole = async (req, res, next) => {
+    try {
+        const userRoles = await userAccountService.changeRoles(req.params.user, req.params.role, false);
+        return res.json(userRoles);
+    } catch (e) {
+        return next(e)
+    }
 
 }
 
 
-export const getUser = async (req, res, next) => {
+export const findUser = async (req, res, next) => {
     try {
-        const userAccount = await userAccountService.getUser(req.params.user);
+        const userAccount = await userAccountService.findUser(req.params.user);
         return res.json(userAccount);
     } catch (e) {
         return next(e);

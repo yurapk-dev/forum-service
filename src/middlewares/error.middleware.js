@@ -9,6 +9,16 @@ if (err.message?.toLowerCase().includes('not found')) {
         "path": req.path
     })
 }
+if (err.message?.toLowerCase().includes('user already exists')) {
+    return res.status(409).json({
+        "timestamp": new Date().toISOString(),
+        "status": 409,
+        "error": "Conflict",
+        "message": err.message,
+        "path": req.path
+    })
+}
+
 return res.status(500).json({
     "timestamp": new Date().toISOString(),
     "status": 500,
