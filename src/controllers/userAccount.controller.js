@@ -10,8 +10,8 @@ export const registerUser = async (req, res, next) => {
 }
 
 export const loginUser = async (req, res, next) => {
-
-    throw new Error('Not implemented');
+const userAccount = await userAccountService.findUser(req.principal.userName);
+return res.json(userAccount);
 }
 
 export const removeUser = async (req, res, next) => {
@@ -41,8 +41,8 @@ export const addRole = async (req, res, next) => {
     }
 }
 export const changePassword = async (req, res) => {
-
-    throw new Error('Not implemented');
+await userAccountService.changePassword(req.principal.userName, req.body.password);
+return res.status(204).end()
 }
 
 export const deleteRole = async (req, res, next) => {

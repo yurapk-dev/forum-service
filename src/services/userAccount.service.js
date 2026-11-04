@@ -3,17 +3,12 @@ import bcrypt from 'bcrypt';
 
 export const registerUser = async user => {
     try {
-        const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(user.password, salt);
+
         return await userAccountRepository.addUser(user);
     } catch (e) {
         throw new Error('User already exists');
     }
 }
-
-// export const loginUser = async login => {
-//     // TODO implement login user
-// }
 
 export const removeUser = async (login) => {
     const userAccount = await userAccountRepository.removeUser(login);
@@ -38,9 +33,7 @@ export const changeRoles = async (login, role, isAddRole) => {
 }
 
 export const changePassword = async (login, newPassword) => {
-    const salt = await bcrypt.genSalt(10);
-    const password = await bcrypt.hash(newPassword, salt);
-    const userAccount = await userAccountRepository.changePassword(login, password);
+    const userAccount = await userAccountRepository.changePassword(login, newPassword);
     if (!userAccount) {
         throw new Error('User not found');
     }
