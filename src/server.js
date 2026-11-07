@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import postRoutes from "./routes/post.routes.js";
 import userRoutes from "./routes/userAccount.routes.js";
 import mongoose from "mongoose";
@@ -7,12 +8,13 @@ import errorHandler from "./middlewares/error.middleware.js";
 import authentication from "./middlewares/authentication.js";
 import {createAdmin} from "./configuration/initAdmin.js";
 import authorizationRoutes from "./routes/authorization.routes.js";
-
+import {corsOptions} from "./configuration/corsOptions.js";
 
 const port = process.env.PORT || 3000;
 
-const app = express();
 
+const app = express();
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(authentication);
 app.use(authorizationRoutes);
